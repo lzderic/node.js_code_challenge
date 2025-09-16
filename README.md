@@ -88,6 +88,44 @@ npm run test:integration
 
 ---
 
+## 🛡️ Git Hooks & Husky
+
+This project uses [Husky](https://typicode.github.io/husky) to enforce code formatting before every commit.
+
+### How it works
+
+- A **pre-commit** hook is set up using Husky. Before every commit, it runs:
+  ```sh
+  npm run format
+  ```
+  This ensures your code is formatted and linted before it is committed.
+
+### Setup Instructions
+
+1. **Install dependencies (if you haven't already):**
+
+```sh
+npm install
+```
+
+2. **(If you just cloned the repo) Install Husky hooks:**
+
+```sh
+npm run prepare
+```
+
+This will set up the `.husky` folder and activate the hooks.
+
+3. **Commit as usual:**
+
+```sh
+git add .
+git commit -m "your message"
+```
+
+The pre-commit hook will automatically run `npm run format` before the commit is finalized. If formatting fails, the commit will be aborted.
+
+---
 
 ## 🛠️ Code Style
 
