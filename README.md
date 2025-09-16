@@ -174,6 +174,7 @@ __tests__/            # Unit and integration tests
   integration-tests/  # Integration test scripts
   unit-tests/         # Unit test scripts
   test-data/          # Test input files
+.husky/               # Git hooks managed by Husky (pre-commit, etc.)
 run_all_examples.sh   # Batch script to run all test-data files (Unix)
 package.json          # Project metadata and scripts
 eslint.config.js      # ESLint configuration
