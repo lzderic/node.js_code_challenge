@@ -106,7 +106,7 @@ export function runScriptWithArgs(args = [], opts = {}) {
     const proc = spawn(nodeBin, [mainScript, ...args], {
       ...opts,
       env,
-      stdio: ['ignore', 'pipe', 'pipe'],
+      stdio: ['pipe', 'pipe', 'pipe'],
     });
     let stdout = '';
     let stderr = '';
@@ -114,5 +114,9 @@ export function runScriptWithArgs(args = [], opts = {}) {
     proc.stderr.on('data', (d) => (stderr += d));
     proc.on('close', (code) => resolve({ code, stdout, stderr }));
     proc.on('error', reject);
+    if (opts.input) {
+      proc.stdin.write(opts.input);
+      proc.stdin.end();
+    }
   });
 }

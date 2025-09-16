@@ -170,6 +170,21 @@ describe('Integration: main.js with all test-data files', () => {
   }, 130000);
 });
 
+describe('stdin parsing', () => {
+  test('parses URLs from stdin and exits on stream end', async () => {
+    const { code, stdout, stderr } = await runScriptWithArgs([], {
+      input: '[ www.google.com ]\n',
+    });
+    expect(code).toBe(0);
+    expect(stderr).toBe('');
+    const lines = stdout.trim().split('\n').filter(Boolean);
+    expect(lines.length).toBe(1);
+    const actual = JSON.parse(lines[0]);
+    expect(actual.url).toBe('www.google.com');
+    expect(actual.title).toBe('Google');
+  });
+});
+
 describe('Error handling', () => {
   test('Exits with error code and message on missing file', async () => {
     const { code, stdout, stderr } = await runScriptWithArgs(['no_such_file.txt']);
