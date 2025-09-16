@@ -95,6 +95,7 @@ export const EXPECTED_12_MIXED_CASES = [
  *
  * @param {string[]} [args=[]] - Arguments to pass to the CLI script (e.g., file paths).
  * @param {object} [opts={}] - Options for the child process (e.g., env vars).
+ * @param {string} [opts.input] - If provided, this string will be piped to the script's stdin.
  * @returns {Promise<{ code: number, stdout: string, stderr: string }>} Resolves with exit code, stdout, and stderr.
  */
 export function runScriptWithArgs(args = [], opts = {}) {
