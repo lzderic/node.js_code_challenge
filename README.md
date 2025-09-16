@@ -5,7 +5,7 @@ A CLI tool for parsing URLs and extracting information from text files.
 ## 📝 Notes
 
 - Requires Node.js 18+ (for native ESM and fetch support).
-- Set the `IM_SECRET` environment variable before running for email hashing.
+- Set the `IM_SECRET` environment variable.
   - You can do this by creating a `.env` file in your project root:
     ```
     IM_SECRET=your_secret_value
