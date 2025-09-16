@@ -41,18 +41,21 @@ _(Parses **tests**/test-data/task_examples.txt by default — this file contains
 
 **Run with echo (single line):**
 
+Both of the following scripts demonstrate parsing input from stdin:
+
+- `npm run start:echo` — parses a single line of input provided via `echo`.
+- `npm run start:cat` — parses a file piped to the script using `cat`.
+
+In both cases, if no file argument is provided, the script reads from stdin, processes URLs as soon as they are detected, and exits when the stream ends.
+
 ```sh
 npm run start:echo
 ```
-
-**Run with cat (pipe file to parser):**
 
 ```sh
 npm run start:cat
 ```
 
-- This demonstrates parsing a file piped to the script via stdin.
-  In both cases, if no file argument is provided, the script reads from stdin, processes URLs as soon as they are detected, and exits when the stream ends.
 - **Run all test-data files (batch):**
 
 ```sh
@@ -85,14 +88,23 @@ npm run test:integration
 
 ---
 
+
 ## 🛠️ Code Style
 
-**Lint your code with ESLint:**
+**Run Prettier only:**
+
+```sh
+npm run prettier
+```
+
+**Lint your code with ESLint only:**
+
 ```sh
 npm run lint
 ```
 
-**Run prettier:**
+**Format and lint (Prettier then ESLint):**
+
 ```sh
 npm run format
 ```
@@ -118,11 +130,18 @@ echo "[ www.google.com ]" | node src/main.js
 ## 📁 Project Structure
 
 ```
-src/                # Main application code
-__tests__/          # Unit and integration tests
-  test-data/        # Test input files
-run_all_examples.sh # Batch script to run all test-data files
-package.json
+src/                  # Main application code
+  utils/              # Utility modules (e.g., error handling)
+__tests__/            # Unit and integration tests
+  integration-tests/  # Integration test scripts
+  unit-tests/         # Unit test scripts
+  test-data/          # Test input files
+run_all_examples.sh   # Batch script to run all test-data files (Unix)
+package.json          # Project metadata and scripts
+eslint.config.js      # ESLint configuration
+.prettierrc           # Prettier configuration
+.gitignore            # Git ignore rules
+README.md             # Project documentation
 ```
 
 ---

@@ -89,6 +89,14 @@ export const EXPECTED_12_MIXED_CASES = [
   { url: 'www.final.com', title: 'final.com' },
 ];
 
+/**
+ * Spawns the main CLI script with the given arguments and options, capturing stdout and stderr.
+ * Used for integration testing to simulate CLI usage with various inputs.
+ *
+ * @param {string[]} [args=[]] - Arguments to pass to the CLI script (e.g., file paths).
+ * @param {object} [opts={}] - Options for the child process (e.g., env vars).
+ * @returns {Promise<{ code: number, stdout: string, stderr: string }>} Resolves with exit code, stdout, and stderr.
+ */
 export function runScriptWithArgs(args = [], opts = {}) {
   const nodeBin = process.execPath;
   const mainScript = path.join(process.cwd(), 'src', 'main.js');

@@ -12,7 +12,8 @@
     "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=__tests__/unit-tests",
     "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=__tests__/integration-tests --runInBand",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "prettier": "prettier --write .",
+    "format": "npm run prettier && npm run lint"
   },
   "author": "Luka Žderić",
   "license": "ISC",
