@@ -1,0 +1,34 @@
+{
+  "name": "node.js_code_challenge",
+  "version": "1.0.0",
+  "main": "url_parser.js",
+  "type": "module",
+  "scripts": {
+    "start:file": "node src/main.js __tests__/test-data/task_examples.txt",
+    "start:batch": "bash run_all_examples.sh",
+    "start:echo": "echo \"[ www.google.com ]\" | node src/main.js",
+    "start:cat": "cat __tests__/test-data/task_examples.txt | node src/main.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=__tests__/unit-tests",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=__tests__/integration-tests --runInBand",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "author": "Luka Žderić",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.35.0",
+    "jest": "^30.1.3",
+    "prettier": "^3.6.2"
+  },
+  "jest": {
+    "testRegex": "\\.test\\.js$",
+    "testPathIgnorePatterns": [
+      "/test_utils.js$"
+    ]
+  }
+}

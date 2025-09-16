@@ -1,0 +1,3 @@
+asdf \[www.google.com]
+some text \[www.bing.com] more
+\[www.youtube.com] is escaped

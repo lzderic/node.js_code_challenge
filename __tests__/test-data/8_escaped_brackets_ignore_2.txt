@@ -1,0 +1,3 @@
+asdf \\[www.google.com]
+double slashes \\[www.github.com] avoid this
+escaped \\[www.test.com]

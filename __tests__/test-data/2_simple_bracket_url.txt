@@ -1,0 +1,3 @@
+other example [ www.google.com ] fg
+yet another one [www.wikipedia.org]
+This one is surrounded by text [ www.nasa.gov ] and continues

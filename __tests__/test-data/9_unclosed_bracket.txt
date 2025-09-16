@@ -1,0 +1,4 @@
+broken open [ www.unclosed.com
+missing close [www.missing.com
+edge case [www.incomplete.com text continues
+[no close www.also-broken.com

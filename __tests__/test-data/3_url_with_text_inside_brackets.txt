@@ -1,0 +1,4 @@
+example [ some text www.google.com ] sdfgsd
+try this [ blah blah www.facebook.com more text ]
+[before after www.reddit.com inside]
+More random text [ content www.bbc.com and more ]

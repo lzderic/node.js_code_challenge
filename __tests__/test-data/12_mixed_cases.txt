@@ -1,0 +1,6 @@
+escaped \[www.fake.com]
+good one [www.real.com]
+messy reversed [www.left.com [www.right.com]]
+extra [text text www.example.com www.final.com]
+bad \[www.shouldnot.com]
+complex [ [inner.com] middle.com]

@@ -1,0 +1,2 @@
+multiple urls [bla www.first.com asdfasdf www.second.com truc]
+[random text www.apple.com text www.microsoft.com text www.ibm.com]
