@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "prettier": "prettier --write .",
     "format": "npm run prettier && npm run lint",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "author": "Luka Žderić",
   "license": "ISC",
