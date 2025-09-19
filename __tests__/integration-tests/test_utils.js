@@ -17,12 +17,10 @@ export const EXPECTED_2_SIMPLE_BRACKET_URL = [
   {
     url: 'www.wikipedia.org',
     title: 'Wikipedia',
-    email: '<b6efa02072498c3468bb943ca04ec8735fcba910065cacc1c2e3b157eb3adb10>',
   },
   {
     url: 'www.nasa.gov',
     title: 'NASA',
-    email: '<3b524cfb35f4555e5c1cece970017c470c1a130b7b4549003ca9560ffa0ddb79>',
   },
 ];
 
@@ -31,7 +29,6 @@ export const EXPECTED_3_URL_WITH_TEXT_INSIDE_BRACKETS = [
   {
     url: 'www.reddit.com',
     title: 'Reddit - The heart of the internet',
-    email: '<843089120639eb3c0e1bf6077aa7c8652805f4a44c6d8095ee66d78a6200cb42>',
   },
   {
     url: 'www.bbc.com',
@@ -79,12 +76,10 @@ export const EXPECTED_12_MIXED_CASES = [
   {
     url: 'www.real.com',
     title: 'Home to the video player and downloader, RealPlayer from RealNetworks',
-    email: '<e9cf5f206c342b28cfc1a2a7dac41564a74656b0b16038963bf1f49b245ddc85>',
   },
   {
     url: 'www.right.com',
     title: 'Right Management | The Right Partner for Your Talent',
-    email: '<6c5d77a75fde2c19d97abd091190b807692e8d630ac9b8bec3b19832b5cd40ff>',
   },
   { url: 'www.final.com', title: 'final.com' },
 ];

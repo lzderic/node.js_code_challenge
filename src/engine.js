@@ -3,10 +3,11 @@ import path from 'path';
 import crypto from 'crypto';
 import { setTimeout as delay } from 'timers/promises';
 import readline from 'node:readline';
+import deepEmailValidator from 'deep-email-validator';
 import { normalizeUrl, extractUrlsFromText } from './parser.js';
 import { printError, printErrorAndExit } from './utils/error.js';
 
-const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}/i;
+const EMAIL_CANDIDATE_REGEX = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}\b/g;
 const TITLE_REGEX = /<title[^>]*>([\s\S]*?)<\/title>/i;
 
 const visitedUrls = new Set();
@@ -57,6 +58,38 @@ function tryExitIfDone() {
 }
 
 /**
+ * Extracts the first valid email from the HTML body using deep-email-validator.
+ * Skips SMTP check for speed and reliability.
+ * @param {string} body - The HTML/text body to search for emails.
+ * @returns {Promise<string|null>} The first valid email found, or null if none.
+ */
+async function extractValidEmailFromBody(body) {
+  const candidates = body.match(EMAIL_CANDIDATE_REGEX) || [];
+  for (const email of candidates) {
+    const result = await deepEmailValidator.validate(email, { validateSMTP: false });
+    if (
+      result.validators.regex.valid &&
+      result.validators.typo.valid &&
+      result.validators.disposable.valid &&
+      result.validators.mx.valid
+    ) {
+      return email;
+    }
+  }
+  return null;
+}
+
+/**
+ * Extracts the title from the HTML body.
+ * @param {string} body - The HTML/text body to search for a title.
+ * @returns {string|undefined} The title if found, otherwise undefined.
+ */
+function extractTitleFromBody(body) {
+  const titleMatch = body.match(TITLE_REGEX);
+  return titleMatch && titleMatch[1] ? titleMatch[1].trim() : undefined;
+}
+
+/**
  * Processes the URL queue, making HTTP requests and handling responses.
  * Handles rate limiting, retries, and output formatting.
  * @returns {Promise<void>}
@@ -84,21 +117,21 @@ async function processQueue() {
           }
         } else {
           const body = await res.text();
-          const out = { url: rawUrl };
+          const pageData = { url: rawUrl };
 
-          const titleMatch = body.match(TITLE_REGEX);
-          if (titleMatch && titleMatch[1]) out.title = titleMatch[1].trim();
+          const title = extractTitleFromBody(body);
+          if (title) pageData.title = title;
 
-          const emailMatch = body.match(EMAIL_REGEX);
-          if (emailMatch && emailMatch[0]) {
+          const validEmail = await extractValidEmailFromBody(body);
+          if (validEmail) {
             const secret = process.env.IM_SECRET;
             if (secret) {
-              const hash = crypto.createHmac('sha256', secret).update(emailMatch[0]).digest('hex');
-              out.email = `<${hash}>`;
+              const hash = crypto.createHmac('sha256', secret).update(validEmail).digest('hex');
+              pageData.email = `<${hash}>`;
             }
           }
 
-          process.stdout.write(JSON.stringify(out) + '\n');
+          process.stdout.write(JSON.stringify(pageData) + '\n');
         }
       } catch (err) {
         if (attempt === 1) {

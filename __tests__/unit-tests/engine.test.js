@@ -7,6 +7,21 @@ jest.unstable_mockModule('../../src/parser.js', () => ({
   extractUrlsFromText: (t) => (t ? t.split(/\s+/).filter(Boolean) : []),
 }));
 
+jest.unstable_mockModule('deep-email-validator', () => ({
+  default: {
+    validate: async () => ({
+      valid: true,
+      validators: {
+        regex: { valid: true },
+        typo: { valid: true },
+        disposable: { valid: true },
+        mx: { valid: true },
+        smtp: { valid: true },
+      },
+    }),
+  },
+}));
+
 jest.useFakeTimers();
 
 jest.spyOn(global, 'setTimeout').mockImplementation((fn) => {
@@ -18,14 +33,22 @@ jest.unstable_mockModule('timers/promises', () => ({
   setTimeout: () => Promise.resolve(),
 }));
 
-const { enqueueRequest, runWithFile, processLinesFromStream, main } = await import(
-  '../../src/engine.js'
-);
+let enqueueRequest, runWithFile, processLinesFromStream, main;
+
+beforeAll(async () => {
+  const engine = await import('../../src/engine.js');
+  enqueueRequest = engine.enqueueRequest;
+  runWithFile = engine.runWithFile;
+  processLinesFromStream = engine.processLinesFromStream;
+  main = engine.main;
+});
 
 async function flushAll() {
-  jest.runAllTimers();
-  await Promise.resolve();
-  await Promise.resolve();
+  for (let i = 0; i < 5; ++i) {
+    jest.runAllTimers();
+    await Promise.resolve();
+    await Promise.resolve();
+  }
 }
 
 describe('engine.js unit tests', () => {
@@ -51,71 +74,65 @@ describe('engine.js unit tests', () => {
     jest.clearAllMocks();
   });
 
-  test('enqueueRequest triggers fetch and stdout', async () => {
+  test('enqueueRequest fetches URL and writes expected output', async () => {
     enqueueRequest('http://example.com');
     await flushAll();
-
     expect(global.fetch).toHaveBeenCalledWith('http://example.com');
     expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('"url":"http://example.com"'));
+    expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('"title":"My Title"'));
   });
 
-  test('enqueueRequest schedules retry when fetch fails', async () => {
+  test('enqueueRequest schedules retry on fetch failure', async () => {
     global.fetch.mockResolvedValueOnce({ ok: false, status: 500 });
 
     enqueueRequest('http://retry.com');
     await flushAll();
-
     expect(stderrSpy).not.toHaveBeenCalledWith(expect.stringContaining('Failed after retry'));
   });
 
-  test('runWithFile reads file and enqueues URLs', async () => {
+  test('runWithFile reads file and enqueues URLs for fetching', async () => {
     jest.spyOn(fs, 'readFile').mockResolvedValue('http://file.com');
 
     await runWithFile('fakefile.txt');
     await flushAll();
-    await flushAll();
-
     expect(global.fetch).toHaveBeenCalledWith('http://file.com');
 
     fs.readFile.mockRestore();
   });
 
-  test('runWithFile handles file read error', async () => {
+  test('runWithFile handles file read error gracefully', async () => {
     jest.spyOn(fs, 'readFile').mockRejectedValue(new Error('nope'));
 
     await runWithFile('bad.txt');
     await flushAll();
-
     expect(stderrSpy).toHaveBeenCalledWith(expect.stringContaining('Error reading file'));
     expect(exitSpy).toHaveBeenCalledWith(1);
 
     fs.readFile.mockRestore();
   });
 
-  test('processLinesFromStream consumes lines and enqueues URLs', async () => {
+  test('processLinesFromStream enqueues and fetches URLs from stream', async () => {
     const input = Readable.from(['http://line1.com\n', 'http://line2.com\n']);
     await processLinesFromStream(input);
     await flushAll();
-
     expect(global.fetch).toHaveBeenCalledWith('http://line1.com');
     expect(global.fetch).toHaveBeenCalledWith('http://line2.com');
   });
 
-  test('main runs with file arg', async () => {
+  test('main runs with file argument and fetches URLs', async () => {
     const originalArgv = [...process.argv];
     process.argv[2] = 'fakefile.txt';
     jest.spyOn(fs, 'readFile').mockResolvedValue('http://mainfile.com');
 
     await main();
     await flushAll();
-
     expect(global.fetch).toHaveBeenCalledWith('http://mainfile.com');
 
     fs.readFile.mockRestore();
     process.argv = originalArgv;
   });
 
-  test('main runs with stdin', async () => {
+  test('main runs with stdin and fetches URLs', async () => {
     process.argv[2] = undefined;
     const input = Readable.from(['http://stdin.com\n']);
     Object.defineProperty(process, 'stdin', { value: input });
@@ -124,7 +141,6 @@ describe('engine.js unit tests', () => {
 
     await main();
     await flushAll();
-
     expect(global.fetch).toHaveBeenCalledWith('http://stdin.com');
   });
 });

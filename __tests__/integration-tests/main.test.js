@@ -30,7 +30,7 @@ describe('Integration: main.js with all test-data files', () => {
       const actual = JSON.parse(lines[i]);
       expect(actual).toEqual(EXPECTED_TASK_EXAMPLES[i]);
     }
-  });
+  }, 130000);
 
   test('1_not_in_brackets.txt', async () => {
     const filePath = path.join(testDataDir, '1_not_in_brackets.txt');
@@ -104,7 +104,7 @@ describe('Integration: main.js with all test-data files', () => {
       const actual = JSON.parse(lines[i]);
       expect(actual).toEqual(EXPECTED_6_NESTED_BRACKETS_OUTERMOST_COUNTS_2[i]);
     }
-  });
+  }, 130000);
 
   test('7_escaped_brackets_ignore_1.txt', async () => {
     const filePath = path.join(testDataDir, '7_escaped_brackets_ignore_1.txt');

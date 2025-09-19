@@ -20,6 +20,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "deep-email-validator": "^0.1.21",
     "dotenv": "^17.2.2"
   },
   "devDependencies": {
